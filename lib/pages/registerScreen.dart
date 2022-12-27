@@ -16,7 +16,7 @@ class _formRegisterScreen extends State<registerScreen>
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
   bool isLoading = false;
-  var valueKader;
+  var valueKader = 'Bukan Kader';
 
   @override
   Widget build(BuildContext context) {
@@ -148,9 +148,9 @@ class _formRegisterScreen extends State<registerScreen>
                 Radio<String>(
                   value: 'Kader',
                   groupValue: valueKader,
-                  onChanged: (String? value) {
+                  onChanged: (var value) {
                     setState(() {
-                      valueKader = value;
+                      valueKader = value!;
                       showSnackbar();
                     });
                   },
@@ -168,9 +168,9 @@ class _formRegisterScreen extends State<registerScreen>
               Radio<String>(
                 value: 'Bukan Kader',
                 groupValue: valueKader,
-                onChanged: (String? value) {
+                onChanged: (var value) {
                   setState(() {
-                    valueKader = value;
+                    valueKader = value!;
                     showSnackbar();
                   });
                 },
