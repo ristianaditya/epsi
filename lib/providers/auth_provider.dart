@@ -2,6 +2,7 @@ import 'package:epsi/services/auth_service.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:epsi/models/user_model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProvider with ChangeNotifier {
   UserModel? _user;
@@ -52,4 +53,9 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
+}
+
+class GoogleSignInApi {
+  static final _googleSignIn = GoogleSignIn();
+  static Future<GoogleSignInAccount?> login() => _googleSignIn.signIn();
 }

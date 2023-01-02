@@ -2,6 +2,7 @@ import 'package:epsi/styleLoginRegister.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/auth_provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // ignore: camel_case_types
 class loginScreen extends StatefulWidget {
@@ -16,6 +17,14 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
   bool isLoading = false;
 
   @override
+  Future<void> signIn() async {
+    try {
+      await GoogleSignInApi.login();
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -113,6 +122,48 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
       );
     }
 
+    Widget loadingLogin() {
+      return Container(
+        width: 340,
+        height: 45,
+        margin: const EdgeInsets.only(top: 10),
+        child: ElevatedButton(
+          onPressed: () {},
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.all(
+              const Color.fromRGBO(93, 167, 219, 1),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation(
+                    Color(0xffF1F0F2),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 4,
+              ),
+              Text(
+                'Loading',
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     Widget buttonSocial() {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -122,15 +173,8 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
             height: 55,
             margin: const EdgeInsets.only(top: 10, right: 10),
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const loginScreen();
-                    },
-                  ),
-                );
+              onPressed: () async {
+                await signIn();
               },
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -141,7 +185,7 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
                 backgroundColor: MaterialStateProperty.all(Colors.white),
               ),
               child: Image.asset(
-                'assets/icon/google.png',
+                'assets/icon/google_icon.png',
                 height: 25,
                 fit: BoxFit.fill,
               ),
@@ -173,7 +217,7 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
                 ),
               ),
               child: Image.asset(
-                'assets/icon/facebook.png',
+                'assets/icon/facebook_icon.png',
                 height: 25,
                 fit: BoxFit.fill,
               ),
@@ -271,7 +315,7 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
 
                   ubahPassword(),
 
-                  buttonLogin(),
+                  isLoading ? loadingLogin() : buttonLogin(),
 
                   Container(
                     alignment: Alignment.center,

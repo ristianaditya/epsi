@@ -53,7 +53,7 @@ abstract class styleLoginRegister {
       alignment: Alignment.topRight,
       padding: const EdgeInsets.only(right: 30),
       child: Image.asset(
-        'assets/logo/epsi.png',
+        'assets/logo/epsi_title.png',
         height: 24,
         width: 100,
         fit: BoxFit.fill,
@@ -63,7 +63,7 @@ abstract class styleLoginRegister {
 
   Widget ilustrat() {
     return Image.asset(
-      'assets/background/mom.png',
+      'assets/background/ilustr_login.png',
       height: 250,
       width: 270,
     );

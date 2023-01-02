@@ -9,7 +9,7 @@ class WelcomeScreen extends StatelessWidget {
 
     Widget logoLogin() {
       return Image.asset(
-        'assets/logo/epsi_logo_login.png',
+        'assets/logo/epsi_logo.png',
         height: 250,
         width: 125,
         fit: BoxFit.fill,
