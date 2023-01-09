@@ -1,4 +1,4 @@
-import 'package:epsi/styleLoginRegister.dart';
+import 'package:epsi/styleTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/auth_provider.dart';
@@ -11,12 +11,11 @@ class loginScreen extends StatefulWidget {
   _formLoginScreen createState() => _formLoginScreen();
 }
 
-class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
+class _formLoginScreen extends State<loginScreen> {
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
   bool isLoading = false;
 
-  @override
   Future<void> signIn() async {
     try {
       await GoogleSignInApi.login();
@@ -25,6 +24,7 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -41,9 +41,9 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
         Navigator.pushNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Color(0xffED6363),
-            content: Text(
+          SnackBar(
+            backgroundColor: dangerColor,
+            content: const Text(
               'Gagal Login!',
               textAlign: TextAlign.center,
             ),
@@ -91,10 +91,9 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
             textStyle: const TextStyle(fontSize: 20),
           ),
           onPressed: null,
-          child: const Text(
+          child: Text(
             'Ubah Password ?',
-            style: TextStyle(
-                color: Color.fromRGBO(150, 145, 145, 1), fontSize: 13),
+            style: TextStyle(color: textTitleColor, fontSize: 13),
           ),
         ),
       );
@@ -114,7 +113,7 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-              const Color.fromRGBO(93, 167, 219, 1),
+              colorPrimary,
             ),
           ),
           child: const Text('Login'),
@@ -136,7 +135,7 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-              const Color.fromRGBO(93, 167, 219, 1),
+              colorPrimary,
             ),
           ),
           child: Row(
@@ -234,19 +233,18 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
+            Text(
               'Tidak punya akun ?',
-              style: TextStyle(
-                  color: Color.fromARGB(255, 109, 109, 109), fontSize: 13),
+              style: TextStyle(color: textDescColor, fontSize: 13),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/register');
               },
-              child: const Text(
+              child: Text(
                 'Daftar Sekarang',
                 style: TextStyle(
-                    color: Color.fromARGB(255, 108, 134, 219),
+                    color: textButtonColor,
                     fontSize: 13,
                     fontWeight: FontWeight.bold),
               ),
@@ -257,15 +255,15 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
     }
 
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(240, 246, 248, 1),
+      backgroundColor: backgroundColorPrimary,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/background/welcomeNew.png'),
+              image: backgroundImageLogin,
               fit: BoxFit.fill,
             ),
           ),
@@ -320,11 +318,9 @@ class _formLoginScreen extends State<loginScreen> with styleLoginRegister {
                   Container(
                     alignment: Alignment.center,
                     margin: const EdgeInsets.only(top: 25),
-                    child: const Text(
+                    child: Text(
                       'Atau masuk dengan akun',
-                      style: TextStyle(
-                          color: Color.fromRGBO(150, 145, 145, 1),
-                          fontSize: 13),
+                      style: TextStyle(color: textTitleColor, fontSize: 13),
                     ),
                   ),
 

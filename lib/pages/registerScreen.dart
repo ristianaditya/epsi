@@ -1,6 +1,6 @@
 import 'package:epsi/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:epsi/styleLoginRegister.dart';
+import 'package:epsi/styleTheme.dart';
 import 'package:provider/provider.dart';
 
 class registerScreen extends StatefulWidget {
@@ -9,8 +9,7 @@ class registerScreen extends StatefulWidget {
   _formRegisterScreen createState() => _formRegisterScreen();
 }
 
-class _formRegisterScreen extends State<registerScreen>
-    with styleLoginRegister {
+class _formRegisterScreen extends State<registerScreen> {
   TextEditingController nameController = TextEditingController(text: '');
   TextEditingController nikController = TextEditingController(text: '');
   TextEditingController emailController = TextEditingController(text: '');
@@ -36,9 +35,9 @@ class _formRegisterScreen extends State<registerScreen>
         password: passwordController.text,
       )) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Color(0xff2C96F1),
-            content: Text(
+          SnackBar(
+            backgroundColor: successColor,
+            content: const Text(
               'Berhasil Register!',
               textAlign: TextAlign.center,
             ),
@@ -47,9 +46,9 @@ class _formRegisterScreen extends State<registerScreen>
         Navigator.pushNamed(context, '/login');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Color(0xffED6363),
-            content: Text(
+          SnackBar(
+            backgroundColor: dangerColor,
+            content: const Text(
               'Gagal Register!',
               textAlign: TextAlign.center,
             ),
@@ -136,9 +135,9 @@ class _formRegisterScreen extends State<registerScreen>
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const Text('Apakah anda kader ',
+          Text('Apakah anda kader ',
               style: TextStyle(
-                  color: Color.fromARGB(255, 129, 128, 128),
+                  color: textTitleColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 14)),
           Container(
@@ -155,9 +154,9 @@ class _formRegisterScreen extends State<registerScreen>
                     });
                   },
                 ),
-                const Text('Iya',
+                Text('Iya',
                     style: TextStyle(
-                        color: Color.fromARGB(255, 129, 128, 128),
+                        color: textTitleColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 14)),
               ],
@@ -175,10 +174,10 @@ class _formRegisterScreen extends State<registerScreen>
                   });
                 },
               ),
-              const Text(
+              Text(
                 'Tidak',
                 style: TextStyle(
-                    color: Color.fromARGB(255, 129, 128, 128),
+                    color: textTitleColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 14),
               ),
@@ -202,7 +201,7 @@ class _formRegisterScreen extends State<registerScreen>
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-              const Color.fromRGBO(93, 167, 219, 1),
+              colorPrimary,
             ),
           ),
           child: const Text('Registrasi'),
@@ -224,7 +223,7 @@ class _formRegisterScreen extends State<registerScreen>
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-              const Color.fromRGBO(93, 167, 219, 1),
+              colorPrimary,
             ),
           ),
           child: Row(
@@ -259,19 +258,18 @@ class _formRegisterScreen extends State<registerScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
+            Text(
               'Sudah punya akun ?',
-              style: TextStyle(
-                  color: Color.fromARGB(255, 109, 109, 109), fontSize: 13),
+              style: TextStyle(color: textDescColor, fontSize: 13),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: const Text(
+              child: Text(
                 'Masuk Sekarang',
                 style: TextStyle(
-                    color: Color.fromARGB(255, 108, 134, 219),
+                    color: textButtonColor,
                     fontSize: 13,
                     fontWeight: FontWeight.bold),
               ),
@@ -282,14 +280,14 @@ class _formRegisterScreen extends State<registerScreen>
     }
 
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(240, 246, 248, 1),
+      backgroundColor: backgroundColorPrimary,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/background/welcomeNew.png'),
+              image: backgroundImageLogin,
               fit: BoxFit.fill,
             ),
           ),
@@ -376,7 +374,7 @@ class _formRegisterScreen extends State<registerScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('$valueKader dipilih'),
-        duration: Duration(seconds: 1),
+        duration: const Duration(seconds: 1),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:epsi/styleTheme.dart';
 
 // ignore: camel_case_types
 class homeScreen extends StatefulWidget {
@@ -235,7 +236,7 @@ class _homeScreen extends State<homeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const Text(
-                    'Informasi Posyandu',
+                    'Raport Anak',
                     style: TextStyle(
                       fontSize: 18.0,
                       color: Colors.white,
@@ -246,14 +247,14 @@ class _homeScreen extends State<homeScreen> {
                     height: 5,
                   ),
                   const Text(
-                    'Kenali lebih dekat posyandu',
+                    'Pantau mudah perkembangan',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.white,
                     ),
                   ),
                   const Text(
-                    'Sekitar anda',
+                    'si kecil',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.white,
@@ -305,8 +306,7 @@ class _homeScreen extends State<homeScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget cardGrafik() {
     final data = [
       LinearSales(0, 5),
       LinearSales(1, 25),
@@ -326,32 +326,208 @@ class _homeScreen extends State<homeScreen> {
         measureFn: (LinearSales series, _) => series.sales,
       )
     ];
-
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(240, 246, 248, 1),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Raport Anak',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Barcode',
+    return Container(
+      height: 220,
+      width: 335,
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 30),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(4, 6),
+            spreadRadius: 0,
+            blurRadius: 8,
+            color: Color.fromRGBO(0, 0, 0, 0.06),
           ),
         ],
-        currentIndex: 0,
-        selectedItemColor: Color.fromARGB(255, 111, 0, 255),
-        onTap: null,
+      ),
+      child: Column(
+        children: <Widget>[
+          const SizedBox(
+            height: 3,
+          ),
+          const Text('Grafik rekap pertumbuhan anak'),
+          const SizedBox(
+            height: 3,
+          ),
+          const Divider(
+            color: Color.fromARGB(255, 59, 126, 180),
+            thickness: 1,
+          ),
+          Expanded(
+            child: charts.LineChart(series, animate: true),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget headerNews() {
+    return Container(
+      width: 450,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(right: 30, left: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const <Widget>[
+          Text(
+            'Berita Terkini',
+            style: TextStyle(
+                color: Color.fromARGB(255, 51, 144, 219),
+                fontSize: 18,
+                fontWeight: FontWeight.w500),
+          ),
+          SizedBox(
+            height: 3,
+          ),
+          Divider(
+            color: Color.fromARGB(255, 129, 192, 243),
+            thickness: 3,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget cardNews() {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        width: 340,
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(right: 7),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(4, 6),
+              spreadRadius: 0,
+              blurRadius: 8,
+              color: Color.fromRGBO(0, 0, 0, 0.06),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Image.asset(
+                'assets/logo/foto_orang.jpg',
+                height: 100,
+                width: 100,
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      'Menkes hingga Shahnaz Haque Puji Kader Posyandu Banyuwangi',
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 72, 151, 216),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      truncate(
+                          'Menteri Kesehatan Budi Gunadi Sadikin hingga pesohor Shahnaz Haque memuji',
+                          length: 70),
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: backgroundColorPrimary,
+      bottomNavigationBar: SizedBox(
+        height: 65,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25.0),
+            topRight: Radius.circular(25.0),
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedFontSize: 13,
+            unselectedFontSize: 13,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Container(
+                  margin: const EdgeInsets.only(bottom: 4),
+                  child: Image.asset(
+                    'assets/icon/home.png',
+                    height: 25,
+                    width: 25,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Container(
+                  margin: const EdgeInsets.only(bottom: 3),
+                  child: Image.asset(
+                    'assets/icon/book.png',
+                    height: 25,
+                    width: 26,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                label: 'Raport',
+              ),
+              BottomNavigationBarItem(
+                icon: Container(
+                  margin: const EdgeInsets.only(bottom: 5),
+                  child: Image.asset(
+                    'assets/icon/barcode.png',
+                    height: 23,
+                    width: 24,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                label: 'Barcode',
+              ),
+              BottomNavigationBarItem(
+                icon: Container(
+                  margin: const EdgeInsets.only(bottom: 3),
+                  child: Image.asset(
+                    'assets/icon/user.png',
+                    height: 27,
+                    width: 27,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                label: 'Profile',
+              ),
+            ],
+            currentIndex: 0,
+            selectedItemColor: const Color.fromARGB(255, 89, 0, 255),
+            onTap: null,
+          ),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: <Widget>[
@@ -362,41 +538,11 @@ class _homeScreen extends State<homeScreen> {
                 ),
                 cardPosyandu(),
                 cardRaport(),
-                Container(
-                  height: 220,
-                  width: 335,
-                  padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(4, 6),
-                        spreadRadius: 0,
-                        blurRadius: 8,
-                        color: Color.fromRGBO(0, 0, 0, 0.06),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(
-                        height: 3,
-                      ),
-                      const Text('Grafik rekap pertumbuhan anak'),
-                      const SizedBox(
-                        height: 3,
-                      ),
-                      const Divider(
-                        color: Color.fromARGB(255, 59, 126, 180),
-                        thickness: 1,
-                      ),
-                      Expanded(
-                        child: charts.LineChart(series, animate: true),
-                      ),
-                    ],
-                  ),
-                ),
+                cardGrafik(),
+                headerNews(),
+                cardNews(),
+                cardNews(),
+                cardNews(),
               ],
             ),
           ),
@@ -411,4 +557,11 @@ class LinearSales {
   final int sales;
 
   LinearSales(this.year, this.sales);
+}
+
+String truncate(String text, {length = 7, omission = '...'}) {
+  if (length >= text.length) {
+    return text;
+  }
+  return text.replaceRange(length, text.length, omission);
 }

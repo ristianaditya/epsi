@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:epsi/styleTheme.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -19,13 +20,13 @@ class WelcomeScreen extends StatelessWidget {
     Widget selamatDatang() {
       return Container(
         margin: const EdgeInsets.only(top: 40.0),
-        child: const Text(
+        child: Text(
           'Selamat Datang',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 35,
             fontWeight: FontWeight.bold,
-            color: Color.fromRGBO(130, 134, 139, 1),
+            color: textTitleColor,
           ),
         ),
       );
@@ -35,13 +36,13 @@ class WelcomeScreen extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.only(right: 50, left: 50),
         margin: const EdgeInsets.only(top: 10.0),
-        child: const Text(
+        child: Text(
           'EPSI membantu orang tua yang ingin mendapatkan informasi seputar pengingat jadwal kegiatan posyandu (vaksinasi, imunisasi, sosialiasi, dll), konsultasi orangtua dengan dokter dan memantau tumbuh kembang anak.',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: Color.fromARGB(255, 95, 97, 100),
+            color: textDescColor,
           ),
         ),
       );
@@ -63,16 +64,16 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
             side: MaterialStateProperty.all(
-              const BorderSide(
-                color: Color.fromRGBO(93, 167, 219, 1),
+              BorderSide(
+                color: colorPrimary,
                 width: 2.5,
                 style: BorderStyle.solid,
               ),
             ),
           ),
-          child: const Text(
+          child: Text(
             'Buat Akun',
-            style: TextStyle(color: Color.fromRGBO(93, 167, 219, 1)),
+            style: TextStyle(color: colorPrimary),
           ),
         ),
       );
@@ -94,7 +95,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-              const Color.fromRGBO(93, 167, 219, 1),
+              colorPrimary,
             ),
           ),
           child: const Text('Masuk dengan Akun'),
@@ -103,13 +104,13 @@ class WelcomeScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(240, 246, 248, 1),
+      backgroundColor: backgroundColorPrimary,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/background/welcome.png'),
+              image: backgroundImageWelcome,
               fit: BoxFit.fill,
             ),
           ),
