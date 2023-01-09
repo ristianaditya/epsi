@@ -397,7 +397,7 @@ class _homeScreen extends State<homeScreen> {
       child: Container(
         width: 340,
         margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.only(right: 7),
+        padding: const EdgeInsets.only(right: 7, left: 7),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -413,12 +413,14 @@ class _homeScreen extends State<homeScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Image.asset(
-                'assets/logo/foto_orang.jpg',
-                height: 100,
-                width: 100,
+            Center(
+              child: Expanded(
+                flex: 1,
+                child: Image.asset(
+                  'assets/background/default_image.png',
+                  height: 100,
+                  width: 100,
+                ),
               ),
             ),
             Expanded(
@@ -428,9 +430,11 @@ class _homeScreen extends State<homeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Menkes hingga Shahnaz Haque Puji Kader Posyandu Banyuwangi',
-                      style: TextStyle(
+                    Text(
+                      truncate(
+                          'Menkes hingga Shahnaz Haque Puji Kader Posyandu Banyuwangi',
+                          length: 55),
+                      style: const TextStyle(
                           color: Color.fromARGB(255, 72, 151, 216),
                           fontSize: 13,
                           fontWeight: FontWeight.w500),
@@ -443,6 +447,15 @@ class _homeScreen extends State<homeScreen> {
                           'Menteri Kesehatan Budi Gunadi Sadikin hingga pesohor Shahnaz Haque memuji',
                           length: 70),
                       style: const TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    const Text(
+                      'Baca Selengkapnya',
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 72, 151, 216),
+                          fontSize: 12),
                     ),
                   ],
                 ),
