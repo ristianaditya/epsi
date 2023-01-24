@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:epsi/pages/welcomeScreen.dart';
 import 'package:epsi/pages/loginScreen.dart';
 import 'package:epsi/pages/registerScreen.dart';
-import 'package:epsi/pages/homeScreen.dart';
+import 'package:epsi/pages/mainScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:epsi/providers/page_provider.dart';
 
 void main(List<String> args) {
   runApp(const MyApp());
@@ -18,6 +19,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(
+          create: (context) => PageProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'EPSI',
@@ -25,7 +29,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const WelcomeScreen(),
-          '/home': (context) => const homeScreen(),
+          '/home': (context) => const mainScreen(),
           '/login': (context) => const loginScreen(),
           '/register': (context) => const registerScreen(),
         },

@@ -17,7 +17,7 @@ class AuthProvider with ChangeNotifier {
     required String name,
     required String nik,
     required String email,
-    required String kader,
+    required String roles,
     required String password,
   }) async {
     try {
@@ -25,13 +25,14 @@ class AuthProvider with ChangeNotifier {
         name: name,
         nik: nik,
         email: email,
-        kader: kader,
+        roles: roles,
         password: password,
       );
-
+      print(user);
       _user = user;
       return true;
     } catch (e) {
+      print(e);
       return false;
     }
   }

@@ -5,9 +5,8 @@ class UserModel {
   String? name;
   String? email;
   String? nik;
-  String? kader;
+  String? roles;
   String? password;
-  String? profilePhotoUrl;
   String? token;
 
   UserModel(
@@ -15,9 +14,8 @@ class UserModel {
       required this.name,
       required this.email,
       required this.nik,
-      required this.kader,
+      required this.roles,
       required this.password,
-      required this.profilePhotoUrl,
       required this.token});
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -25,9 +23,8 @@ class UserModel {
     name = json['name'];
     email = json['email'];
     nik = json['nik'];
-    kader = json['kader'];
+    roles = json['roles'];
     password = json['password'];
-    profilePhotoUrl = json['profile_photo_url'];
     token = json['token'];
   }
 
@@ -37,9 +34,8 @@ class UserModel {
       'name': name,
       'email': email,
       'nik': nik,
-      'kader': kader,
+      'roles': roles,
       'password': password,
-      'profile_photo_url': profilePhotoUrl,
       'token': token,
     };
   }

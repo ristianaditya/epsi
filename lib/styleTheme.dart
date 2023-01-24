@@ -23,6 +23,19 @@ var shadowCustom = const BoxDecoration(
   ],
 );
 
+var cardCustome = const BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.all(Radius.circular(7)),
+  boxShadow: [
+    BoxShadow(
+      offset: Offset(4, 6),
+      spreadRadius: 0,
+      blurRadius: 8,
+      color: Color.fromRGBO(0, 0, 0, 0.06),
+    ),
+  ],
+);
+
 // ignore: non_constant_identifier_names
 DecorationCustom(var nama, IconData? customIcon,
     {Padding? suffixIcon,
@@ -57,6 +70,13 @@ DecorationCustom(var nama, IconData? customIcon,
       ),
     ),
   );
+}
+
+String truncateCustome(String text, {length = 7, omission = '...'}) {
+  if (length >= text.length) {
+    return text;
+  }
+  return text.replaceRange(length, text.length, omission);
 }
 
 Widget logoEpsi() {

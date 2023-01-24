@@ -15,7 +15,7 @@ class _formRegisterScreen extends State<registerScreen> {
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
   bool isLoading = false;
-  var valueKader = 'Bukan Kader';
+  var valueKader = 'orangtua';
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _formRegisterScreen extends State<registerScreen> {
         name: nameController.text,
         nik: nikController.text,
         email: emailController.text,
-        kader: valueKader,
+        roles: valueKader,
         password: passwordController.text,
       )) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -145,7 +145,7 @@ class _formRegisterScreen extends State<registerScreen> {
             child: Row(
               children: <Widget>[
                 Radio<String>(
-                  value: 'Kader',
+                  value: 'kader',
                   groupValue: valueKader,
                   onChanged: (var value) {
                     setState(() {
@@ -165,7 +165,7 @@ class _formRegisterScreen extends State<registerScreen> {
           Row(
             children: <Widget>[
               Radio<String>(
-                value: 'Bukan Kader',
+                value: 'orangtua',
                 groupValue: valueKader,
                 onChanged: (var value) {
                   setState(() {
@@ -282,17 +282,17 @@ class _formRegisterScreen extends State<registerScreen> {
     return Scaffold(
       backgroundColor: backgroundColorPrimary,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: backgroundImageLogin,
-              fit: BoxFit.fill,
-            ),
-          ),
           child: SingleChildScrollView(
-            child: SizedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: backgroundImageLogin,
+                  fit: BoxFit.cover,
+                ),
+              ),
               width: 500,
               child: Column(
                 children: <Widget>[
