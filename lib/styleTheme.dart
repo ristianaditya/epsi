@@ -49,7 +49,14 @@ DecorationCustom(var nama, IconData? customIcon,
     fillColor: Colors.white,
     filled: true,
     hintText: nama,
+    errorStyle: const TextStyle(height: 0.8),
     hintStyle: const TextStyle(color: Colors.grey),
+    errorBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(
+          width: 1,
+          color: Colors.red,
+        )),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
       borderSide: const BorderSide(

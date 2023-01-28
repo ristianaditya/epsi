@@ -2,6 +2,7 @@ import 'package:epsi/styleTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/auth_provider.dart';
+import 'package:validatorless/validatorless.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 // ignore: camel_case_types
@@ -15,6 +16,7 @@ class _formLoginScreen extends State<loginScreen> {
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
   bool isLoading = false;
+  final formKey = GlobalKey<FormState>();
 
   Future<void> signIn() async {
     try {
@@ -33,22 +35,23 @@ class _formLoginScreen extends State<loginScreen> {
       setState(() {
         isLoading = true;
       });
-
-      if (await authProvider.login(
-        email: emailController.text,
-        password: passwordController.text,
-      )) {
-        Navigator.pushNamed(context, '/home');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: dangerColor,
-            content: const Text(
-              'Gagal Login!',
-              textAlign: TextAlign.center,
+      if (formKey.currentState!.validate()) {
+        if (await authProvider.login(
+          email: emailController.text,
+          password: passwordController.text,
+        )) {
+          Navigator.pushNamed(context, '/home');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: dangerColor,
+              content: const Text(
+                'Password atau email anda salah !',
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
 
       setState(() {
@@ -57,45 +60,51 @@ class _formLoginScreen extends State<loginScreen> {
     }
 
     Widget inputEmail() {
-      return Container(
-        width: 340,
-        // ignore: sort_child_properties_last
-        child: TextFormField(
-          controller: emailController,
-          decoration: DecorationCustom('Email', Icons.email_outlined),
-        ),
-        decoration: shadowCustom,
+      return Stack(
+        children: [
+          Container(
+            width: 340,
+            height: 48,
+            decoration: shadowCustom,
+          ),
+          SizedBox(
+            height: 75,
+            width: 340,
+            child: TextFormField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: DecorationCustom('Email', Icons.email_outlined),
+              validator: Validatorless.multiple([
+                Validatorless.required('Email wajib diisi'),
+                Validatorless.email('Format Email salah'),
+              ]),
+            ),
+          ),
+        ],
       );
     }
 
     Widget inputPassword() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        width: 340,
-        // ignore: sort_child_properties_last
-        child: TextField(
-          obscureText: true,
-          controller: passwordController,
-          decoration: DecorationCustom('Password', Icons.lock),
-        ),
-        decoration: shadowCustom,
-      );
-    }
-
-    Widget ubahPassword() {
-      return Container(
-        alignment: Alignment.topRight,
-        margin: const EdgeInsets.only(right: 25),
-        child: TextButton(
-          style: TextButton.styleFrom(
-            textStyle: const TextStyle(fontSize: 20),
+      return Stack(
+        children: [
+          Container(
+            width: 340,
+            height: 48,
+            decoration: shadowCustom,
           ),
-          onPressed: null,
-          child: Text(
-            'Ubah Password ?',
-            style: TextStyle(color: textTitleColor, fontSize: 13),
+          SizedBox(
+            height: 70,
+            width: 340,
+            child: TextFormField(
+              obscureText: true,
+              controller: passwordController,
+              decoration: DecorationCustom('Password', Icons.lock),
+              validator: Validatorless.multiple([
+                Validatorless.required('Password wajib diisi'),
+              ]),
+            ),
           ),
-        ),
+        ],
       );
     }
 
@@ -103,7 +112,7 @@ class _formLoginScreen extends State<loginScreen> {
       return Container(
         width: 340,
         height: 45,
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 30),
         child: ElevatedButton(
           onPressed: handleSignIn,
           style: ButtonStyle(
@@ -125,7 +134,7 @@ class _formLoginScreen extends State<loginScreen> {
       return Container(
         width: 340,
         height: 45,
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 30),
         child: ElevatedButton(
           onPressed: () {},
           style: ButtonStyle(
@@ -254,95 +263,96 @@ class _formLoginScreen extends State<loginScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColorPrimary,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: backgroundImageLogin,
-              fit: BoxFit.fill,
+    return Form(
+      key: formKey,
+      child: Scaffold(
+        backgroundColor: backgroundColorPrimary,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: backgroundImageLogin,
+                fit: BoxFit.fill,
+              ),
             ),
-          ),
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: 500,
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  logoEpsi(),
-
-                  ilustrat(),
-
-                  // responsive margin
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (screenSize.height >= 800) {
-                        return const SizedBox(
-                          height: 30,
-                        );
-                      } else {
-                        return const SizedBox(
-                          height: 10,
-                        );
-                      }
-                    },
-                  ),
-
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: const EdgeInsets.only(left: 25, bottom: 20),
-                    child: const Text(
-                      'Masuk ke akun anda',
-                      style: TextStyle(
-                          color: Color.fromRGBO(150, 145, 145, 1),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                width: 500,
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
 
-                  inputEmail(),
+                    logoEpsi(),
 
-                  inputPassword(),
+                    ilustrat(),
 
-                  ubahPassword(),
-
-                  isLoading ? loadingLogin() : buttonLogin(),
-
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(top: 25),
-                    child: Text(
-                      'Atau masuk dengan akun',
-                      style: TextStyle(color: textTitleColor, fontSize: 13),
+                    // responsive margin
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        if (screenSize.height >= 800) {
+                          return const SizedBox(
+                            height: 30,
+                          );
+                        } else {
+                          return const SizedBox(
+                            height: 10,
+                          );
+                        }
+                      },
                     ),
-                  ),
 
-                  buttonSocial(),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: const EdgeInsets.only(left: 25, bottom: 20),
+                      child: const Text(
+                        'Masuk ke akun anda',
+                        style: TextStyle(
+                            color: Color.fromRGBO(150, 145, 145, 1),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                    ),
 
-                  // responsive margin
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (screenSize.height >= 800) {
-                        return const SizedBox(
-                          height: 70,
-                        );
-                      } else {
-                        return const SizedBox(
-                          height: 0,
-                        );
-                      }
-                    },
-                  ),
+                    inputEmail(),
 
-                  register(),
-                ],
+                    inputPassword(),
+
+                    isLoading ? loadingLogin() : buttonLogin(),
+
+                    Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(top: 25),
+                      child: Text(
+                        'Atau masuk dengan akun',
+                        style: TextStyle(color: textTitleColor, fontSize: 13),
+                      ),
+                    ),
+
+                    buttonSocial(),
+
+                    // responsive margin
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        if (screenSize.height >= 800) {
+                          return const SizedBox(
+                            height: 70,
+                          );
+                        } else {
+                          return const SizedBox(
+                            height: 0,
+                          );
+                        }
+                      },
+                    ),
+
+                    register(),
+                  ],
+                ),
               ),
             ),
           ),

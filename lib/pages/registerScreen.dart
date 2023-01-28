@@ -2,6 +2,7 @@ import 'package:epsi/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:epsi/styleTheme.dart';
 import 'package:provider/provider.dart';
+import 'package:validatorless/validatorless.dart';
 
 class registerScreen extends StatefulWidget {
   const registerScreen({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _formRegisterScreen extends State<registerScreen> {
   TextEditingController passwordController = TextEditingController(text: '');
   bool isLoading = false;
   var valueKader = 'orangtua';
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,107 +29,179 @@ class _formRegisterScreen extends State<registerScreen> {
         isLoading = true;
       });
 
-      if (await authProvider.register(
-        name: nameController.text,
-        nik: nikController.text,
-        email: emailController.text,
-        roles: valueKader,
-        password: passwordController.text,
-      )) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: successColor,
-            content: const Text(
-              'Berhasil Register!',
-              textAlign: TextAlign.center,
+      if (formKey.currentState!.validate()) {
+        if (await authProvider.register(
+          name: nameController.text,
+          nik: nikController.text,
+          email: emailController.text,
+          roles: valueKader,
+          password: passwordController.text,
+        )) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: successColor,
+              content: const Text(
+                'Berhasil Register!',
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
-        Navigator.pushNamed(context, '/login');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: dangerColor,
-            content: const Text(
-              'Gagal Register!',
-              textAlign: TextAlign.center,
+          );
+          Navigator.pushNamed(context, '/login');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: dangerColor,
+              content: const Text(
+                'Gagal Register!',
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
+
       setState(() {
         isLoading = false;
       });
     }
 
     Widget inputNama() {
-      return Container(
-        width: 340,
-        alignment: Alignment.topCenter,
-        // ignore: sort_child_properties_last
-        child: TextFormField(
-          controller: nameController,
-          keyboardType: TextInputType.text,
-          decoration: DecorationCustom('Nama Lengkap', Icons.person_outline),
-        ),
-        decoration: shadowCustom,
+      return Stack(
+        children: [
+          Container(
+            width: 340,
+            height: 50,
+            decoration: shadowCustom,
+          ),
+          Container(
+            height: 78,
+            width: 340,
+            alignment: Alignment.topCenter,
+            // ignore: sort_child_properties_last
+            child: TextFormField(
+              controller: nameController,
+              keyboardType: TextInputType.text,
+              decoration:
+                  DecorationCustom('Nama Lengkap', Icons.person_outline),
+              validator: Validatorless.multiple([
+                Validatorless.required('Nama wajib diisi'),
+                Validatorless.min(3, 'Nama minimal 3 huruf'),
+                Validatorless.max(16, 'Nama maximal 16 huruf'),
+              ]),
+            ),
+          ),
+        ],
       );
     }
 
     Widget inputNik() {
-      return Container(
-        width: 340,
-        margin: const EdgeInsets.only(top: 20),
-        // ignore: sort_child_properties_last
-        child: TextFormField(
-          controller: nikController,
-          keyboardType: TextInputType.number,
-          decoration: DecorationCustom('NIK', Icons.numbers_outlined),
-        ),
-        decoration: shadowCustom,
+      return Stack(
+        children: [
+          Container(
+            width: 340,
+            height: 50,
+            decoration: shadowCustom,
+          ),
+          Container(
+            height: 78,
+            width: 340,
+            alignment: Alignment.topCenter,
+            // ignore: sort_child_properties_last
+            child: TextFormField(
+              controller: nikController,
+              keyboardType: TextInputType.number,
+              decoration: DecorationCustom('NIK', Icons.numbers_outlined),
+              validator: Validatorless.multiple([
+                Validatorless.required('NIK wajib diisi'),
+                Validatorless.min(16, 'NIK wajib dengan 16 angka'),
+                Validatorless.max(16, 'NIK wajib dengan 16 angka'),
+              ]),
+            ),
+          ),
+        ],
       );
     }
 
     Widget inputEmail() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        width: 340,
-        // ignore: sort_child_properties_last
-        child: TextFormField(
-          controller: emailController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: DecorationCustom('Email', Icons.email_outlined),
-        ),
-        decoration: shadowCustom,
+      return Stack(
+        children: [
+          Container(
+            width: 340,
+            height: 50,
+            decoration: shadowCustom,
+          ),
+          Container(
+            height: 78,
+            width: 340,
+            alignment: Alignment.topCenter,
+            // ignore: sort_child_properties_last
+            child: TextFormField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: DecorationCustom('Email', Icons.email_outlined),
+              validator: Validatorless.multiple([
+                Validatorless.required('Email wajib diisi'),
+                Validatorless.email('Format Email salah'),
+              ]),
+            ),
+          ),
+        ],
       );
     }
 
     Widget inputPassword() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20),
-        width: 340,
-        // ignore: sort_child_properties_last
-        child: TextFormField(
-          obscureText: true,
-          controller: passwordController,
-          keyboardType: TextInputType.text,
-          decoration: DecorationCustom('Password', Icons.lock),
-        ),
-        decoration: shadowCustom,
+      return Stack(
+        children: [
+          Container(
+            width: 340,
+            height: 50,
+            decoration: shadowCustom,
+          ),
+          Container(
+            height: 78,
+            width: 340,
+            alignment: Alignment.topCenter,
+            // ignore: sort_child_properties_last
+            child: TextFormField(
+              obscureText: true,
+              controller: passwordController,
+              keyboardType: TextInputType.text,
+              decoration: DecorationCustom('Password', Icons.lock),
+              validator: Validatorless.multiple([
+                Validatorless.required('Password wajib diisi'),
+                Validatorless.min(8, 'Password wajib dengan 8 karakter'),
+              ]),
+            ),
+          ),
+        ],
       );
     }
 
     Widget inputConfirmPassowrd() {
-      return Container(
-        margin: const EdgeInsets.only(top: 20, bottom: 10),
-        width: 340,
-        // ignore: sort_child_properties_last
-        child: TextField(
-          obscureText: true,
-          keyboardType: TextInputType.text,
-          decoration: DecorationCustom('Confirm Password', Icons.lock),
-        ),
-        decoration: shadowCustom,
+      return Stack(
+        children: [
+          Container(
+            width: 340,
+            height: 50,
+            decoration: shadowCustom,
+          ),
+          Container(
+            height: 70,
+            width: 340,
+            alignment: Alignment.topCenter,
+            // ignore: sort_child_properties_last
+            child: TextFormField(
+              obscureText: true,
+              keyboardType: TextInputType.text,
+              decoration: DecorationCustom('Konfirmasi Password', Icons.lock),
+              validator: Validatorless.multiple([
+                Validatorless.required('Konfirmasi Password wajib diisi'),
+                Validatorless.compare(
+                    passwordController, 'Konfirmasi Password tidak sama')
+              ]),
+            ),
+          ),
+        ],
       );
     }
 
@@ -279,89 +353,92 @@ class _formRegisterScreen extends State<registerScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColorPrimary,
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: SingleChildScrollView(
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: backgroundImageLogin,
-                  fit: BoxFit.cover,
+    return Form(
+      key: formKey,
+      child: Scaffold(
+        backgroundColor: backgroundColorPrimary,
+        body: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: backgroundImageLogin,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              width: 500,
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  logoEpsi(),
-
-                  ilustrat(),
-
-                  //responsive margin
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (screenSize.height >= 800) {
-                        return const SizedBox(
-                          height: 30,
-                        );
-                      } else {
-                        return const SizedBox(
-                          height: 10,
-                        );
-                      }
-                    },
-                  ),
-
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: const EdgeInsets.only(left: 25, bottom: 20),
-                    child: const Text(
-                      'Buat akun anda',
-                      style: TextStyle(
-                          color: Color.fromRGBO(150, 145, 145, 1),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                width: 500,
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
 
-                  inputNama(),
+                    logoEpsi(),
 
-                  inputNik(),
+                    ilustrat(),
 
-                  inputEmail(),
+                    //responsive margin
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        if (screenSize.height >= 800) {
+                          return const SizedBox(
+                            height: 30,
+                          );
+                        } else {
+                          return const SizedBox(
+                            height: 10,
+                          );
+                        }
+                      },
+                    ),
 
-                  inputPassword(),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: const EdgeInsets.only(left: 25, bottom: 20),
+                      child: const Text(
+                        'Buat akun anda',
+                        style: TextStyle(
+                            color: Color.fromRGBO(150, 145, 145, 1),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                    ),
 
-                  inputConfirmPassowrd(),
+                    inputNama(),
 
-                  dropdownPosyandu(),
+                    inputNik(),
 
-                  isLoading ? loadingRegistrasi() : buttonRegistrasi(),
+                    inputEmail(),
 
-                  //responsive margin
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (screenSize.height >= 800) {
-                        return const SizedBox(
-                          height: 70,
-                        );
-                      } else {
-                        return const SizedBox(
-                          height: 0,
-                        );
-                      }
-                    },
-                  ),
+                    inputPassword(),
 
-                  buttonLogin(),
-                ],
+                    inputConfirmPassowrd(),
+
+                    dropdownPosyandu(),
+
+                    isLoading ? loadingRegistrasi() : buttonRegistrasi(),
+
+                    //responsive margin
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        if (screenSize.height >= 800) {
+                          return const SizedBox(
+                            height: 70,
+                          );
+                        } else {
+                          return const SizedBox(
+                            height: 0,
+                          );
+                        }
+                      },
+                    ),
+
+                    buttonLogin(),
+                  ],
+                ),
               ),
             ),
           ),
