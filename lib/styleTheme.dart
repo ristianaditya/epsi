@@ -79,6 +79,48 @@ DecorationCustom(var nama, IconData? customIcon,
   );
 }
 
+DecorationReadOnlyCustom(var nama, IconData? customIcon,
+    {Padding? suffixIcon,
+    EdgeInsets? contentPadding,
+    OutlineInputBorder? border,
+    TextStyle? hintStyle,
+    String? hintText,
+    Color? fillColor,
+    bool? filled}) {
+  return InputDecoration(
+    fillColor: Color.fromARGB(148, 253, 252, 252),
+    filled: true,
+    hintText: nama,
+    errorStyle: const TextStyle(height: 0.8),
+    hintStyle: const TextStyle(color: Colors.grey),
+    errorBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(
+          width: 1,
+          color: Colors.red,
+        )),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: const BorderSide(
+        width: 0,
+        style: BorderStyle.none,
+      ),
+    ),
+    contentPadding: const EdgeInsets.only(
+      top: 15,
+      bottom: 15,
+      left: 20,
+    ),
+    suffixIcon: Padding(
+      padding: const EdgeInsets.only(right: 15),
+      child: Icon(
+        customIcon,
+        color: const Color.fromARGB(255, 161, 161, 161),
+      ),
+    ),
+  );
+}
+
 String truncateCustome(String text, {length = 7, omission = '...'}) {
   if (length >= text.length) {
     return text;

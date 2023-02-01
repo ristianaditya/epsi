@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:epsi/styleTheme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: camel_case_types
 class ProfileScreen extends StatelessWidget {
@@ -195,11 +196,31 @@ class ProfileScreen extends StatelessWidget {
         child: Container(
           width: 340,
           height: 45,
-          margin: const EdgeInsets.only(top: 25),
+          margin: const EdgeInsets.only(top: 25, bottom: 40),
           child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/login');
-            },
+            onPressed: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Keluar Akun'),
+                content: const Text(
+                    'Apakah anda yakin untuk keluar dari akun ini ?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: const Text('Tidak'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      SharedPreferences pref =
+                          await SharedPreferences.getInstance();
+                      pref.clear();
+                      Navigator.pushNamed(context, '/login');
+                    },
+                    child: const Text('Iya'),
+                  ),
+                ],
+              ),
+            ),
             style: ButtonStyle(
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(

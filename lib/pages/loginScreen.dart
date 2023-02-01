@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/auth_provider.dart';
 import 'package:validatorless/validatorless.dart';
+import 'package:epsi/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:epsi/providers/posyandu_provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 // ignore: camel_case_types
@@ -35,12 +38,29 @@ class _formLoginScreen extends State<loginScreen> {
       setState(() {
         isLoading = true;
       });
+      // Provider.of<PosyanduProvider>(context).getPosyandu();
       if (formKey.currentState!.validate()) {
         if (await authProvider.login(
           email: emailController.text,
           password: passwordController.text,
         )) {
-          Navigator.pushNamed(context, '/home');
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          UserModel? user = authProvider.user;
+          PosyanduProvider posyanduProvider =
+              await Provider.of<PosyanduProvider>(context, listen: false);
+          await posyanduProvider.getPosyandu(token: user?.token);
+
+          // ignore: use_build_context_synchronously
+          if (user?.verifikasi == true) {
+            SharedPreferences pref = await SharedPreferences.getInstance();
+            UserModel? user = authProvider.user;
+            pref.setString("token", "${user?.token}");
+            pref.setString("verifikasi", "${user?.verifikasi}");
+            pref.setString("id", "${user?.id}");
+            Navigator.pushNamed(context, '/home');
+          } else {
+            Navigator.pushNamed(context, '/detailRegister');
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

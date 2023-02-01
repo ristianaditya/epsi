@@ -1,3 +1,4 @@
+import 'package:epsi/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:epsi/styleTheme.dart';
 import 'package:epsi/pages/homeScreen.dart';
@@ -25,6 +26,7 @@ class _mainScreen extends State<mainScreen> {
   @override
   Widget build(BuildContext context) {
     PageProvider pageProvider = Provider.of<PageProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     var judul = '';
     var deskripsi = '';

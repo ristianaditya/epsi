@@ -43,6 +43,7 @@ dependencies:
   syncfusion_flutter_barcodes: ^20.4.43
   sizer: ^2.0.15
   validatorless: ^1.2.3
+  date_field: ^3.0.0
 
 dev_dependencies:
   flutter_test:
