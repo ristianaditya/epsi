@@ -1,18 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/page_provider.dart';
+import 'package:epsi/providers/anak_provider.dart';
+import 'package:epsi/models/anak_model.dart';
 
 // ignore: camel_case_types
-class ListAnakScreen extends StatelessWidget {
-  const ListAnakScreen({super.key});
+class ListAnakScreen extends StatefulWidget {
+  const ListAnakScreen({Key? key}) : super(key: key);
+  @override
+  _formListAnakScreen createState() => _formListAnakScreen();
+}
+
+class _formListAnakScreen extends State<ListAnakScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final postAnakModel = Provider.of<AnakProvider>(context, listen: false);
+    postAnakModel.getAnak();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final postAnakModel = Provider.of<AnakProvider>(context);
     PageProvider pageProvider = Provider.of<PageProvider>(context);
     return GridView.count(
       crossAxisCount: 2,
       children: List.generate(
-        7,
+        postAnakModel.anak.length,
         (index) {
+          final AnakModel dataPerAnak = postAnakModel.anak[index];
+          final dataWarna = (dataPerAnak.jenis_kelamin == 'Laki-Laki')
+              ? Color.fromARGB(255, 85, 128, 207)
+              : Color.fromARGB(255, 207, 85, 146);
           return InkWell(
             onTap: () {
               pageProvider.currentIndex = 6;
@@ -43,12 +62,12 @@ class ListAnakScreen extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 10, left: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10, left: 10),
                       child: Text(
-                        'Deden Saepuloh Nurohman',
+                        '${dataPerAnak.name}',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(
@@ -58,12 +77,12 @@ class ListAnakScreen extends StatelessWidget {
                       height: 30,
                       padding: const EdgeInsets.only(top: 6),
                       width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 85, 128, 207),
-                        borderRadius: BorderRadius.only(
+                      decoration: BoxDecoration(
+                        color: dataWarna,
+                        borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(8),
                             bottomRight: Radius.circular(8)),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             offset: Offset(4, 6),
                             spreadRadius: 0,
@@ -72,10 +91,10 @@ class ListAnakScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Text(
-                        'Laki-Laki',
+                      child: Text(
+                        '${dataPerAnak.jenis_kelamin}',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     )
                   ],

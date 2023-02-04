@@ -3,15 +3,39 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:epsi/styleTheme.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/page_provider.dart';
+import 'package:epsi/providers/auth_provider.dart';
+import 'package:epsi/providers/berita_provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:epsi/models/berita_model.dart';
+import 'package:html/parser.dart' show parseFragment;
 
-// ignore: camel_case_types
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+  @override
+  _formHomeScreen createState() => _formHomeScreen();
+}
+
+class _formHomeScreen extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final postModel = Provider.of<AuthProvider>(context, listen: false);
+    postModel.getUser();
+
+    final postBeritaModel = Provider.of<BeritaProvider>(context, listen: false);
+    postBeritaModel.getBerita();
+  }
 
   @override
   Widget build(BuildContext context) {
     PageProvider pageProvider = Provider.of<PageProvider>(context);
+    final postModel = Provider.of<AuthProvider>(context);
+    final postBeritaModel = Provider.of<BeritaProvider>(context);
+
+    String? dataFoto = (postModel.user?.photo == null)
+        ? 'https://d1x1dyl0o67nta.cloudfront.net/default.jpeg'
+        : postModel.user?.photo;
+
     Widget header() {
       return Row(
         children: <Widget>[
@@ -70,8 +94,8 @@ class HomeScreen extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
-                child: Image.asset(
-                  'assets/logo/foto_orang.jpg',
+                child: Image.network(
+                  '${dataFoto}',
                   height: 60,
                   width: 60,
                 ),
@@ -82,19 +106,19 @@ class HomeScreen extends StatelessWidget {
               margin: const EdgeInsets.only(top: 17),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const <Widget>[
-                  Text(
+                children: <Widget>[
+                  const Text(
                     'Selamat Datang',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
-                  Text('Ibu Rokayah Hayati',
-                      style: TextStyle(
+                  Text('${postModel.user?.name}'.toUpperCase(),
+                      style: const TextStyle(
                           fontSize: 16.0,
                           color: Colors.white,
                           fontWeight: FontWeight.bold)),
@@ -396,80 +420,91 @@ class HomeScreen extends StatelessWidget {
     }
 
     Widget cardNews() {
-      return InkWell(
-        onTap: () {
-          pageProvider.currentIndex = 8;
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final BeritaModel dataPerBerita = postBeritaModel.berita[index];
+          String? dataFotoBerita = (dataPerBerita.photo == null ||
+                  dataPerBerita.photo == '')
+              ? 'https://d1x1dyl0o67nta.cloudfront.net/default_landscape.jpeg'
+              : dataPerBerita.photo;
+          return InkWell(
+            onTap: () {
+              pageProvider.currentIndex = 8;
+              pageProvider.idBerita = dataPerBerita.id!;
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(right: 7, left: 7),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(4, 6),
+                    spreadRadius: 0,
+                    blurRadius: 8,
+                    color: Color.fromRGBO(0, 0, 0, 0.06),
+                  ),
+                ],
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Image.network(
+                        '$dataFotoBerita',
+                        height: 12.h,
+                        width: 10.w,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            truncateCustome('${dataPerBerita.title}',
+                                length: 55),
+                            style: TextStyle(
+                                color: successColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            truncateCustome(
+                                '${parseFragment(dataPerBerita.description).text}',
+                                length: 70),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Baca Selengkapnya',
+                            style: TextStyle(color: successColor, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
         },
-        child: Container(
-          width: 340,
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.only(right: 7, left: 7),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(4, 6),
-                spreadRadius: 0,
-                blurRadius: 8,
-                color: Color.fromRGBO(0, 0, 0, 0.06),
-              ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Container(
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: Image.asset(
-                    'assets/background/default_image.png',
-                    height: 10.h,
-                    width: 10.w,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        truncateCustome(
-                            'Menkes hingga Shahnaz Haque Puji Kader Posyandu Banyuwangi',
-                            length: 55),
-                        style: TextStyle(
-                            color: successColor,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        truncateCustome(
-                            'Menteri Kesehatan Budi Gunadi Sadikin hingga pesohor Shahnaz Haque memuji',
-                            length: 70),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'Baca Selengkapnya',
-                        style: TextStyle(color: successColor, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+        itemCount: postBeritaModel.berita.length,
       );
     }
 
@@ -486,9 +521,10 @@ class HomeScreen extends StatelessWidget {
                 cardRaport(),
                 cardGrafik(),
                 headerNews(),
-                cardNews(),
-                cardNews(),
-                cardNews(),
+                Container(
+                  width: 340,
+                  child: cardNews(),
+                )
               ],
             ),
           ),

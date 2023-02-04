@@ -10,6 +10,7 @@ import 'package:epsi/pages/mainScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/page_provider.dart';
 import 'package:epsi/providers/anak_provider.dart';
+import 'package:epsi/providers/berita_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main(List<String> args) async {
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
           create: (context) => PageProvider(),
         ),
         ChangeNotifierProvider(create: (context) => PosyanduProvider()),
+        ChangeNotifierProvider(create: (context) => BeritaProvider()),
       ],
       child: MaterialApp(
         title: 'EPSI',

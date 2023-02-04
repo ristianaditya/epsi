@@ -38,7 +38,6 @@ class _formLoginScreen extends State<loginScreen> {
       setState(() {
         isLoading = true;
       });
-      // Provider.of<PosyanduProvider>(context).getPosyandu();
       if (formKey.currentState!.validate()) {
         if (await authProvider.login(
           email: emailController.text,

@@ -234,8 +234,6 @@ class _formAnakRegisterScreen extends State<AnakRegisterScreen> {
                 decoration: DecorationCustom('tanggal Lahir', Icons.date_range),
                 mode: DateTimeFieldPickerMode.date,
                 autovalidateMode: AutovalidateMode.always,
-                validator: (e) =>
-                    (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
                 onDateSelected: (DateTime value) {
                   setState(() {
                     valueDateTime = value;
@@ -395,7 +393,7 @@ class _formAnakRegisterScreen extends State<AnakRegisterScreen> {
               builder: (BuildContext context) => AlertDialog(
                 title: const Text('Perhatian'),
                 content: const Text(
-                    'Apakah anda yakin untuk melanjutkan ke menyelesaikan tahap ini ?'),
+                    'Apakah anda yakin untuk menyelesaikan tahap ini ?'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),

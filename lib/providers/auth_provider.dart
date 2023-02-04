@@ -97,6 +97,19 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> getUser() async {
+    try {
+      UserModel user = await AuthService().getUser();
+
+      _user = user;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }
 
 class GoogleSignInApi {

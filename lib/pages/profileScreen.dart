@@ -1,13 +1,38 @@
+import 'package:epsi/models/anak_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:epsi/styleTheme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:epsi/providers/auth_provider.dart';
+import 'package:epsi/providers/anak_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: camel_case_types
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+  @override
+  _formProfileScreen createState() => _formProfileScreen();
+}
+
+class _formProfileScreen extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final postAnakModel = Provider.of<AnakProvider>(context, listen: false);
+    postAnakModel.getAnak();
+
+    final postModel = Provider.of<AuthProvider>(context, listen: false);
+    postModel.getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final postModel = Provider.of<AuthProvider>(context);
+    final postAnakModel = Provider.of<AnakProvider>(context);
+    String? dataFoto = (postModel.user?.photo == null)
+        ? 'https://d1x1dyl0o67nta.cloudfront.net/default.jpeg'
+        : postModel.user?.photo;
     Widget profile() {
       return Container(
         margin: const EdgeInsets.only(top: 20, left: 13),
@@ -28,14 +53,12 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const <Widget>[
-                      Text(
+                    children: <Widget>[
+                      const Text(
                         "Nama",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        'Rokayah Hayati',
-                      )
+                      Text("${postModel.user?.name}")
                     ],
                   ),
                   Container(
@@ -46,14 +69,12 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const <Widget>[
-                      Text(
+                    children: <Widget>[
+                      const Text(
                         "Jenis Kelamin",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        'Wanita',
-                      ),
+                      Text("${postModel.user?.jenis_kelamin}")
                     ],
                   ),
                   Container(
@@ -64,14 +85,12 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const <Widget>[
-                      Text(
+                    children: <Widget>[
+                      const Text(
                         "Posyandu",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        'Aster',
-                      ),
+                      Text("${postModel.user?.posyandu}")
                     ],
                   ),
                   Container(
@@ -82,15 +101,15 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const <Widget>[
-                      Text(
+                    children: <Widget>[
+                      const Text(
                         "Alamat",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
                         width: 120,
                         child: Text(
-                          'Pameuntasan, Kutawaringin, Bandung Regency, West Java 40911',
+                          "${postModel.user?.alamat}",
                           softWrap: true,
                           maxLines: 4,
                           textAlign: TextAlign.right,
@@ -126,8 +145,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
-                  child: Image.asset(
-                    'assets/logo/foto_orang.jpg',
+                  child: Image.network(
+                    '${dataFoto}',
                     height: 70,
                     width: 70,
                   ),
@@ -150,44 +169,53 @@ class ProfileScreen extends StatelessWidget {
     }
 
     Widget daftarAnak() {
-      return Center(
-        child: Container(
-          width: 340,
-          height: 60,
-          padding: const EdgeInsets.only(left: 25, right: 25),
-          margin: const EdgeInsets.only(top: 10, bottom: 40),
-          decoration: cardCustome,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              const Text("Asep Berlian"),
-              SizedBox(
-                width: 110,
-                height: 30,
-                child: ElevatedButton(
-                  onPressed: null,
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final AnakModel dataPerAnak = postAnakModel.anak[index];
+          return Center(
+            child: Container(
+              width: 340,
+              height: 60,
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              margin: const EdgeInsets.only(top: 10, bottom: 5),
+              decoration: cardCustome,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("${dataPerAnak.name}"),
+                  SizedBox(
+                    width: 110,
+                    height: 30,
+                    child: ElevatedButton(
+                      onPressed: null,
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all(
+                          const Color.fromRGBO(19, 116, 171, 1),
+                        ),
+                      ),
+                      child: const Text(
+                        'Selengkapnya',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    backgroundColor: MaterialStateProperty.all(
-                      const Color.fromRGBO(19, 116, 171, 1),
-                    ),
-                  ),
-                  child: const Text(
-                    'Selengkapnya',
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+        itemCount: postAnakModel.anak.length,
       );
     }
 

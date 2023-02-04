@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:epsi/models/anak_model.dart';
 
 class AnakProvider with ChangeNotifier {
-  AnakModel? _anak;
-  AnakModel? get anak => _anak;
+  List<AnakModel> _anak = [];
+  List<AnakModel> get anak => _anak;
 
-  set anak(AnakModel? anak) {
+  set anak(List<AnakModel> anak) {
     _anak = anak;
     notifyListeners();
   }
@@ -22,7 +22,7 @@ class AnakProvider with ChangeNotifier {
     required String? token,
   }) async {
     try {
-      AnakModel anak = await AnakService().createAnak(
+      List<AnakModel> anak = await AnakService().createAnak(
         name: name,
         nik: nik,
         tempat_lahir: tempat_lahir,
@@ -36,6 +36,17 @@ class AnakProvider with ChangeNotifier {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  Future<void> getAnak() async {
+    try {
+      List<AnakModel> anak = await AnakService().getAnak();
+
+      _anak = anak;
+      notifyListeners();
+    } catch (e) {
+      print(e);
     }
   }
 }

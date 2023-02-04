@@ -1,17 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:epsi/styleTheme.dart';
+import 'package:provider/provider.dart';
+import 'package:epsi/providers/page_provider.dart';
+import 'package:epsi/providers/berita_provider.dart';
+import 'package:html/parser.dart' show parseFragment;
 
-// ignore: camel_case_types
-class NewsScreen extends StatelessWidget {
-  const NewsScreen({super.key});
+class NewsScreen extends StatefulWidget {
+  const NewsScreen({Key? key}) : super(key: key);
+  @override
+  _formNewsScreen createState() => _formNewsScreen();
+}
+
+class _formNewsScreen extends State<NewsScreen> {
+  @override
   @override
   Widget build(BuildContext context) {
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
+    final postBeritaModel = Provider.of<BeritaProvider>(context, listen: false);
+    final firstBerita = postBeritaModel.berita
+        .firstWhere((element) => element.id == pageProvider.idBerita);
     Widget imageCover() {
+      String? dataFotoBerita =
+          (firstBerita.photo == null || firstBerita.photo == '')
+              ? 'https://d1x1dyl0o67nta.cloudfront.net/default_landscape.jpeg'
+              : firstBerita.photo;
       return Container(
         margin: const EdgeInsets.only(bottom: 5),
-        child: Image.asset(
-          'assets/background/berita_posyandu.jpeg',
+        child: Image.network(
+          '$dataFotoBerita',
           fit: BoxFit.cover,
           height: 40.h,
           width: MediaQuery.of(context).size.width,
@@ -22,10 +39,10 @@ class NewsScreen extends StatelessWidget {
     Widget judulBerita() {
       return Container(
         margin: const EdgeInsets.only(top: 20.0, bottom: 10),
-        child: const Text(
-          'Warga Nusa Loka BSD Tolak Tempat Pengelolaan Sampah Dibangun Dekat Posyandu dan Sungai',
+        child: Text(
+          '${firstBerita.title}',
           textAlign: TextAlign.left,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             fontFamily: 'Staatliches',
@@ -60,16 +77,8 @@ class NewsScreen extends StatelessWidget {
 
     Widget isiBerita() {
       return Container(
-        margin: const EdgeInsets.only(top: 10),
-        child: const Text(
-          'Warga menduga pembangunan TPS3R tidak sesuai dengan prosedur standar operasi atau SOP, sebab, lokasinya berada lahan fasilitas umum (fasum) dekat posyandu dan sungai. Selain itu, warga juga mengaku belum ada sosialisasi terkait pembangunan TPS3R. "Saya menolak karena untuk apa program Kota Tanpa Kumuh (Kotaku). Buat limbah kok di permukiman. Saya pikir sudah pada setuju, ternyata tetangga pada menolak, jadi saya turut menolak juga," ujar salah seorang warga berinisial N, saat ditemui Kompas.com, Rabu (7/9/2022)Berdasarkan pengamatan Kompas.com di lokasi, terdapat gedung posyandu di sebelah lokasi pembangunan. Selain itu letak TPS3R juga dekat dengan sungai. Warga khawatir terjadi pencemaran aliran sungai dan sulit dilokalisasi apabila terjadi kebocoran. Di sekitar TPS3R juga terpasang spanduk penolakan yang bertuliskan, Kami warga RT 5 menolak pembangunan tempat pengelolaan sampah.',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: 12.0,
-            fontFamily: 'Oxygen',
-          ),
-        ),
-      );
+          margin: const EdgeInsets.only(top: 10),
+          child: Text('${parseFragment(firstBerita.description).text}'));
     }
 
     return Sizer(builder: (context, orientation, deviceType) {
