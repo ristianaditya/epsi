@@ -1,3 +1,5 @@
+import 'package:epsi/pages/homeScreen.dart';
+import 'package:epsi/pages/raportScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/page_provider.dart';
@@ -35,6 +37,7 @@ class _formListAnakScreen extends State<ListAnakScreen> {
           return InkWell(
             onTap: () {
               pageProvider.currentIndex = 6;
+              pageProvider.idAnak = dataPerAnak.id!;
             },
             child: Center(
               child: Container(

@@ -21,7 +21,7 @@ class PosyanduService {
 
     var response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
-      List data = jsonDecode(response.body)['Posyandu'];
+      List data = jsonDecode(response.body)['posyandu'];
       List<PosyanduModel> posyandu = [];
 
       for (var item in data) {

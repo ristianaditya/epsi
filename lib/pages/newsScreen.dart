@@ -14,7 +14,6 @@ class NewsScreen extends StatefulWidget {
 
 class _formNewsScreen extends State<NewsScreen> {
   @override
-  @override
   Widget build(BuildContext context) {
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
     final postBeritaModel = Provider.of<BeritaProvider>(context, listen: false);

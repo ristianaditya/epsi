@@ -4,6 +4,7 @@ import 'package:epsi/styleTheme.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/page_provider.dart';
 import 'package:epsi/providers/auth_provider.dart';
+import 'package:epsi/providers/raport_provider.dart';
 import 'package:epsi/providers/berita_provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:epsi/models/berita_model.dart';
@@ -24,6 +25,9 @@ class _formHomeScreen extends State<HomeScreen> {
 
     final postBeritaModel = Provider.of<BeritaProvider>(context, listen: false);
     postBeritaModel.getBerita();
+
+    final postRaportModel = Provider.of<RaportProvider>(context, listen: false);
+    postRaportModel.getRaportDashboard();
   }
 
   @override
@@ -31,9 +35,10 @@ class _formHomeScreen extends State<HomeScreen> {
     PageProvider pageProvider = Provider.of<PageProvider>(context);
     final postModel = Provider.of<AuthProvider>(context);
     final postBeritaModel = Provider.of<BeritaProvider>(context);
+    final postRaportModel = Provider.of<RaportProvider>(context);
 
     String? dataFoto = (postModel.user?.photo == null)
-        ? 'https://d1x1dyl0o67nta.cloudfront.net/default.jpeg'
+        ? 'https://i.ibb.co/2dXghKF/icon-profile.png'
         : postModel.user?.photo;
 
     Widget header() {
@@ -47,7 +52,9 @@ class _formHomeScreen extends State<HomeScreen> {
           const Spacer(),
           IconButton(
               padding: const EdgeInsets.only(right: 30),
-              onPressed: () {},
+              onPressed: () {
+                pageProvider.currentIndex = 3;
+              },
               icon: Icon(
                 Icons.settings,
                 color: Colors.blue.shade300,
@@ -335,60 +342,63 @@ class _formHomeScreen extends State<HomeScreen> {
     }
 
     Widget cardGrafik() {
-      final data = [
-        LinearSales(0, 5),
-        LinearSales(1, 25),
-        LinearSales(2, 100),
-        LinearSales(3, 90),
-        LinearSales(4, 2),
-        LinearSales(5, 71),
-        LinearSales(6, 81),
-        LinearSales(7, 75),
-      ];
-      List<charts.Series<LinearSales, int>> series = [
-        charts.Series(
-          id: "Products",
-          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-          data: data,
-          domainFn: (LinearSales series, _) => series.year,
-          measureFn: (LinearSales series, _) => series.sales,
-        )
-      ];
-      return Container(
-        height: 220,
-        width: 335,
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(bottom: 30),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(4, 6),
-              spreadRadius: 0,
-              blurRadius: 8,
-              color: Color.fromRGBO(0, 0, 0, 0.06),
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          var dataPerAnak = postRaportModel.dashboard?[index];
+          List<LinearSales> dataBerat = [];
+          for (var item in dataPerAnak[1]) {
+            dataBerat.add(LinearSales(item[1], item[0]));
+          }
+          List<charts.Series<LinearSales, int>> series = [
+            charts.Series(
+              id: "Products",
+              colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+              data: dataBerat,
+              domainFn: (LinearSales series, _) => series.year,
+              measureFn: (LinearSales series, _) => series.sales,
+            )
+          ];
+          return Center(
+              child: Container(
+            height: 220,
+            width: 335,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.only(bottom: 30),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(4, 6),
+                  spreadRadius: 0,
+                  blurRadius: 8,
+                  color: Color.fromRGBO(0, 0, 0, 0.06),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 3,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 3,
+                ),
+                Text('Grafik rekap pertumbuhan anak ${dataPerAnak[0]}'),
+                const SizedBox(
+                  height: 3,
+                ),
+                const Divider(
+                  color: Color.fromARGB(255, 59, 126, 180),
+                  thickness: 1,
+                ),
+                Expanded(
+                  child: charts.LineChart(series, animate: true),
+                ),
+              ],
             ),
-            const Text('Grafik rekap pertumbuhan anak'),
-            const SizedBox(
-              height: 3,
-            ),
-            const Divider(
-              color: Color.fromARGB(255, 59, 126, 180),
-              thickness: 1,
-            ),
-            Expanded(
-              child: charts.LineChart(series, animate: true),
-            ),
-          ],
-        ),
+          ));
+        },
+        itemCount: postRaportModel.dashboard?.length ?? 0,
       );
     }
 

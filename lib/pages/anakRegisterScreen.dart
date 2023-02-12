@@ -8,6 +8,7 @@ import 'package:epsi/models/user_model.dart';
 import 'package:date_field/date_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class AnakRegisterScreen extends StatefulWidget {
   const AnakRegisterScreen({Key? key}) : super(key: key);
@@ -29,6 +30,7 @@ class _formAnakRegisterScreen extends State<AnakRegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'Register Anak');
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     AnakProvider anakProvider = Provider.of<AnakProvider>(context);
     UserModel? user = authProvider.user;

@@ -5,6 +5,7 @@ import 'package:epsi/styleTheme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:epsi/providers/auth_provider.dart';
 import 'package:epsi/providers/anak_provider.dart';
+import 'package:epsi/providers/posyandu_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,12 +25,17 @@ class _formProfileScreen extends State<ProfileScreen> {
 
     final postModel = Provider.of<AuthProvider>(context, listen: false);
     postModel.getUser();
+
+    final postModelPosyandu =
+        Provider.of<PosyanduProvider>(context, listen: false);
+    postModelPosyandu.getPosyanduDetail(idPosyandu: postModel.user?.posyandu);
   }
 
   @override
   Widget build(BuildContext context) {
     final postModel = Provider.of<AuthProvider>(context);
     final postAnakModel = Provider.of<AnakProvider>(context);
+    final postModelPosyandu = Provider.of<PosyanduProvider>(context);
     String? dataFoto = (postModel.user?.photo == null)
         ? 'https://d1x1dyl0o67nta.cloudfront.net/default.jpeg'
         : postModel.user?.photo;
@@ -90,7 +96,7 @@ class _formProfileScreen extends State<ProfileScreen> {
                         "Posyandu",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text("${postModel.user?.posyandu}")
+                      Text("${postModelPosyandu.posyanduDetail?.name}")
                     ],
                   ),
                   Container(
