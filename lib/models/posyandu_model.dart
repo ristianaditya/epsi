@@ -15,7 +15,7 @@ class PosyanduModel {
     id = json['_id'];
     name = json['name'];
     alamat = json['alamat'];
-    gambar = json['gambar'];
+    gambar = json['photo'];
   }
 
   Map<String, dynamic> toJson() {
