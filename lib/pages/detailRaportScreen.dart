@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:epsi/styleTheme.dart';
+import 'package:provider/provider.dart';
+import 'package:epsi/providers/page_provider.dart';
+import 'package:epsi/providers/raport_provider.dart';
 
 // ignore: camel_case_types
-class DetailRaportScreen extends StatelessWidget {
-  const DetailRaportScreen({super.key});
+class DetailRaportScreen extends StatefulWidget {
+  const DetailRaportScreen({Key? key}) : super(key: key);
+  @override
+  _formDetailRaportScreen createState() => _formDetailRaportScreen();
+}
+
+class _formDetailRaportScreen extends State<DetailRaportScreen> {
   @override
   Widget build(BuildContext context) {
+    final pageProvider = Provider.of<PageProvider>(context, listen: false);
+    final raportProvider = Provider.of<RaportProvider>(context, listen: false);
+    final detailRaport = raportProvider.raport
+        .firstWhere((element) => element.id == pageProvider.idRaport);
     bool isChecked = false;
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -41,21 +53,22 @@ class DetailRaportScreen extends StatelessWidget {
               ],
             ),
             child: Column(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   "Pertumbuhan Berat",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(
+                const Text(
                   "Badan",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 18,
                 ),
                 Text(
-                  "11 Kg",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  "${detailRaport.berat_badan} Kg",
+                  style: const TextStyle(
+                      fontSize: 25, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -81,21 +94,22 @@ class DetailRaportScreen extends StatelessWidget {
                 ],
               ),
               child: Column(
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     "Pertumbuhan Tinggi",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(
+                  const Text(
                     "Badan",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 18,
                   ),
                   Text(
-                    "20 Cm",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    "${detailRaport.tinggi_badan} Cm",
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 ],
               )),
@@ -103,7 +117,7 @@ class DetailRaportScreen extends StatelessWidget {
       );
     }
 
-    Widget cardImunisasi() {
+    Widget cardImunisasi(String? imunisasi, bool? check) {
       return Container(
         width: 340,
         height: 60,
@@ -124,8 +138,8 @@ class DetailRaportScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Hepatitis B',
+            Text(
+              '$imunisasi',
               style: TextStyle(fontSize: 16),
             ),
             Transform.scale(
@@ -133,7 +147,7 @@ class DetailRaportScreen extends StatelessWidget {
               child: Checkbox(
                 checkColor: Colors.white,
                 fillColor: MaterialStateProperty.resolveWith(getColor),
-                value: true,
+                value: check,
                 onChanged: null,
               ),
             ),
@@ -150,16 +164,20 @@ class DetailRaportScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            cardImunisasi(),
-            cardImunisasi(),
-            cardImunisasi(),
-            cardImunisasi(),
-            cardImunisasi(),
-            cardImunisasi(),
-            cardImunisasi(),
-            cardImunisasi(),
-            cardImunisasi(),
-            cardImunisasi(),
+            cardImunisasi('Hepatitis B', detailRaport.hepatitis_b),
+            cardImunisasi('Polio', detailRaport.polio),
+            cardImunisasi('BCG', detailRaport.bcg),
+            cardImunisasi('DTP', detailRaport.dtp),
+            cardImunisasi('HIB', detailRaport.hib),
+            cardImunisasi('PCV', detailRaport.pcv),
+            cardImunisasi('ROTAVIRUS', detailRaport.rotavirus),
+            cardImunisasi('INFLUENZA', detailRaport.influenza),
+            cardImunisasi('MR', detailRaport.mr),
+            cardImunisasi('JE', detailRaport.je),
+            cardImunisasi('VARISELA', detailRaport.varisela),
+            cardImunisasi('HEPATITIS A', detailRaport.hepatitis_a),
+            cardImunisasi('TIFOID', detailRaport.tifoid),
+            cardImunisasi('DENGUE', detailRaport.dengue),
             cardStatus(),
           ],
         ),

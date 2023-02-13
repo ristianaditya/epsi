@@ -17,8 +17,8 @@ class AnakModel {
     required this.orangtua,
   });
 
-  AnakModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+  AnakModel.fromJson(Map<dynamic, dynamic> json) {
+    id = json['_id'];
     name = json['name'];
     nik = json['nik'];
     tempat_lahir = json['tempat_lahir'];

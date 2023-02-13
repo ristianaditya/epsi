@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AnakService {
   String baseUrl = 'http://13.213.41.91:3000/api';
 
-  Future<AnakModel> createAnak({
+  Future<List<AnakModel>> createAnak({
     String? name,
     String? nik,
     String? tempat_lahir,
@@ -37,10 +37,40 @@ class AnakService {
     );
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      AnakModel user = AnakModel.fromJson(data['anak']);
-      return user;
+      List<AnakModel> anak = [];
+      anak.add(AnakModel.fromJson(data['anak']));
+      return anak;
     } else {
       throw Exception('Gagal register');
+    }
+  }
+
+  Future<List<AnakModel>> getAnak() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString("id");
+    var token = prefs.getString("token");
+
+    var url = '$baseUrl/user/$id';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': '$token'
+    };
+
+    var response = await http.get(
+      Uri.parse(url),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      var dataAnak = data['user']['anak'];
+      List<AnakModel> anak = [];
+      for (var item in dataAnak) {
+        anak.add(AnakModel.fromJson(item));
+      }
+      return anak;
+    } else {
+      throw Exception('Gagal Get Data');
     }
   }
 }

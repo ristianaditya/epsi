@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "854500194181",
+    "project_id": "epsi-b9121",
+    "storage_bucket": "epsi-b9121.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854500194181:android:5101d7fa57b560e286f6ec",
+        "android_client_info": {
+          "package_name": "com.example.epsi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854500194181-ivau954tr5pp1gs8er9j1fkti1lnn50u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCb1TpZkfFg7xjA5CxFYxibIzGlsSeTjPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854500194181-ivau954tr5pp1gs8er9j1fkti1lnn50u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "854500194181-628745gpodqltl870n2q3flj4p7lgppe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.epsi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

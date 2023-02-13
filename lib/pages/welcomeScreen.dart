@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:epsi/styleTheme.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -7,6 +8,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'Welcome Screen');
 
     Widget logoLogin() {
       return Image.asset(

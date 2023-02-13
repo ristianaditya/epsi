@@ -12,35 +12,38 @@ class UserModel {
   String? password;
   String? token;
   bool? verifikasi;
+  String? photo;
 
-  UserModel(
-      {required this.id,
-      required this.name,
-      required this.email,
-      required this.nik,
-      required this.roles,
-      required this.alamat,
-      required this.jenis_kelamin,
-      required this.posyandu,
-      required this.password,
-      required this.verifikasi,
-      required this.token});
+  UserModel({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.nik,
+    required this.roles,
+    required this.alamat,
+    required this.jenis_kelamin,
+    required this.posyandu,
+    required this.password,
+    required this.verifikasi,
+    required this.token,
+    required this.photo,
+  });
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+  UserModel.fromJson(Map<dynamic, dynamic> json) {
+    id = json['_id'];
     name = json['name'];
     email = json['email'];
     nik = json['nik'];
     roles = json['roles'];
     alamat = json['alamat'];
     jenis_kelamin = json['jenis_kelamin'];
-    posyandu = json['posyandu'];
     password = json['password'];
     token = json['token'];
     verifikasi = json['verifikasi'];
+    photo = json['photo'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<dynamic, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
@@ -53,6 +56,7 @@ class UserModel {
       'password': password,
       'token': token,
       'verifikasi': verifikasi,
+      'photo': photo,
     };
   }
 }

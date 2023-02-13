@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:epsi/styleTheme.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class registerScreen extends StatefulWidget {
   const registerScreen({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class _formRegisterScreen extends State<registerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'Register');
     var screenSize = MediaQuery.of(context).size;
 
     AuthProvider authProvider = Provider.of<AuthProvider>(context);

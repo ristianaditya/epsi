@@ -8,6 +8,7 @@ import 'package:epsi/models/user_model.dart';
 import 'package:date_field/date_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class AnakRegisterScreen extends StatefulWidget {
   const AnakRegisterScreen({Key? key}) : super(key: key);
@@ -29,6 +30,7 @@ class _formAnakRegisterScreen extends State<AnakRegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'Register Anak');
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     AnakProvider anakProvider = Provider.of<AnakProvider>(context);
     UserModel? user = authProvider.user;
@@ -234,8 +236,6 @@ class _formAnakRegisterScreen extends State<AnakRegisterScreen> {
                 decoration: DecorationCustom('tanggal Lahir', Icons.date_range),
                 mode: DateTimeFieldPickerMode.date,
                 autovalidateMode: AutovalidateMode.always,
-                validator: (e) =>
-                    (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
                 onDateSelected: (DateTime value) {
                   setState(() {
                     valueDateTime = value;
@@ -395,7 +395,7 @@ class _formAnakRegisterScreen extends State<AnakRegisterScreen> {
               builder: (BuildContext context) => AlertDialog(
                 title: const Text('Perhatian'),
                 content: const Text(
-                    'Apakah anda yakin untuk melanjutkan ke menyelesaikan tahap ini ?'),
+                    'Apakah anda yakin untuk menyelesaikan tahap ini ?'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),

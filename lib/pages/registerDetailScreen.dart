@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 import 'package:epsi/models/user_model.dart';
 import 'package:sizer/sizer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class RegisterDetailScreen extends StatefulWidget {
   const RegisterDetailScreen({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class _formRegisterDetailScreen extends State<RegisterDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'Detail Register');
     PosyanduProvider posyanduProvider = Provider.of<PosyanduProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 

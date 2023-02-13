@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:epsi/styleTheme.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:epsi/providers/auth_provider.dart';
 
-// ignore: camel_case_types
-class BarcodeScreen extends StatelessWidget {
-  const BarcodeScreen({super.key});
+class BarcodeScreen extends StatefulWidget {
+  const BarcodeScreen({Key? key}) : super(key: key);
+  @override
+  _formBarcodeScreen createState() => _formBarcodeScreen();
+}
+
+class _formBarcodeScreen extends State<BarcodeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final postModel = Provider.of<AuthProvider>(context, listen: false);
+    postModel.getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final postModel = Provider.of<AuthProvider>(context);
+    String? dataId =
+        (postModel.user?.id == null) ? 'idKosong' : postModel.user?.id;
     return SingleChildScrollView(
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -34,9 +51,9 @@ class BarcodeScreen extends StatelessWidget {
                     ),
                     height: 220,
                     width: 220,
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(15),
                     child: SfBarcodeGenerator(
-                      value: 'www.syncfusion.com',
+                      value: '${dataId}',
                       symbology: QRCode(),
                       // showValue: true,
                     ),
@@ -44,9 +61,10 @@ class BarcodeScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    "Dede Rosmita",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
+                  Text(
+                    "${postModel.user?.name}".toUpperCase(),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 21),
                   )
                 ],
               ),

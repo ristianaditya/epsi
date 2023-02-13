@@ -3,15 +3,44 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:epsi/styleTheme.dart';
 import 'package:provider/provider.dart';
 import 'package:epsi/providers/page_provider.dart';
+import 'package:epsi/providers/auth_provider.dart';
+import 'package:epsi/providers/raport_provider.dart';
+import 'package:epsi/providers/berita_provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:epsi/models/berita_model.dart';
+import 'package:html/parser.dart' show parseFragment;
 
-// ignore: camel_case_types
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+  @override
+  _formHomeScreen createState() => _formHomeScreen();
+}
+
+class _formHomeScreen extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final postModel = Provider.of<AuthProvider>(context, listen: false);
+    postModel.getUser();
+
+    final postBeritaModel = Provider.of<BeritaProvider>(context, listen: false);
+    postBeritaModel.getBerita();
+
+    final postRaportModel = Provider.of<RaportProvider>(context, listen: false);
+    postRaportModel.getRaportDashboard();
+  }
 
   @override
   Widget build(BuildContext context) {
     PageProvider pageProvider = Provider.of<PageProvider>(context);
+    final postModel = Provider.of<AuthProvider>(context);
+    final postBeritaModel = Provider.of<BeritaProvider>(context);
+    final postRaportModel = Provider.of<RaportProvider>(context);
+
+    String? dataFoto = (postModel.user?.photo == null)
+        ? 'https://i.ibb.co/2dXghKF/icon-profile.png'
+        : postModel.user?.photo;
+
     Widget header() {
       return Row(
         children: <Widget>[
@@ -23,7 +52,9 @@ class HomeScreen extends StatelessWidget {
           const Spacer(),
           IconButton(
               padding: const EdgeInsets.only(right: 30),
-              onPressed: () {},
+              onPressed: () {
+                pageProvider.currentIndex = 3;
+              },
               icon: Icon(
                 Icons.settings,
                 color: Colors.blue.shade300,
@@ -70,8 +101,8 @@ class HomeScreen extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
-                child: Image.asset(
-                  'assets/logo/foto_orang.jpg',
+                child: Image.network(
+                  '${dataFoto}',
                   height: 60,
                   width: 60,
                 ),
@@ -82,19 +113,19 @@ class HomeScreen extends StatelessWidget {
               margin: const EdgeInsets.only(top: 17),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const <Widget>[
-                  Text(
+                children: <Widget>[
+                  const Text(
                     'Selamat Datang',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
-                  Text('Ibu Rokayah Hayati',
-                      style: TextStyle(
+                  Text('${postModel.user?.name}'.toUpperCase(),
+                      style: const TextStyle(
                           fontSize: 16.0,
                           color: Colors.white,
                           fontWeight: FontWeight.bold)),
@@ -311,60 +342,63 @@ class HomeScreen extends StatelessWidget {
     }
 
     Widget cardGrafik() {
-      final data = [
-        LinearSales(0, 5),
-        LinearSales(1, 25),
-        LinearSales(2, 100),
-        LinearSales(3, 90),
-        LinearSales(4, 2),
-        LinearSales(5, 71),
-        LinearSales(6, 81),
-        LinearSales(7, 75),
-      ];
-      List<charts.Series<LinearSales, int>> series = [
-        charts.Series(
-          id: "Products",
-          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-          data: data,
-          domainFn: (LinearSales series, _) => series.year,
-          measureFn: (LinearSales series, _) => series.sales,
-        )
-      ];
-      return Container(
-        height: 220,
-        width: 335,
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(bottom: 30),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(4, 6),
-              spreadRadius: 0,
-              blurRadius: 8,
-              color: Color.fromRGBO(0, 0, 0, 0.06),
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          var dataPerAnak = postRaportModel.dashboard?[index];
+          List<LinearSales> dataBerat = [];
+          for (var item in dataPerAnak[1]) {
+            dataBerat.add(LinearSales(item[1], item[0]));
+          }
+          List<charts.Series<LinearSales, int>> series = [
+            charts.Series(
+              id: "Products",
+              colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+              data: dataBerat,
+              domainFn: (LinearSales series, _) => series.year,
+              measureFn: (LinearSales series, _) => series.sales,
+            )
+          ];
+          return Center(
+              child: Container(
+            height: 220,
+            width: 335,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.only(bottom: 30),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(4, 6),
+                  spreadRadius: 0,
+                  blurRadius: 8,
+                  color: Color.fromRGBO(0, 0, 0, 0.06),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 3,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 3,
+                ),
+                Text('Grafik rekap pertumbuhan anak ${dataPerAnak[0]}'),
+                const SizedBox(
+                  height: 3,
+                ),
+                const Divider(
+                  color: Color.fromARGB(255, 59, 126, 180),
+                  thickness: 1,
+                ),
+                Expanded(
+                  child: charts.LineChart(series, animate: true),
+                ),
+              ],
             ),
-            const Text('Grafik rekap pertumbuhan anak'),
-            const SizedBox(
-              height: 3,
-            ),
-            const Divider(
-              color: Color.fromARGB(255, 59, 126, 180),
-              thickness: 1,
-            ),
-            Expanded(
-              child: charts.LineChart(series, animate: true),
-            ),
-          ],
-        ),
+          ));
+        },
+        itemCount: postRaportModel.dashboard?.length ?? 0,
       );
     }
 
@@ -396,80 +430,91 @@ class HomeScreen extends StatelessWidget {
     }
 
     Widget cardNews() {
-      return InkWell(
-        onTap: () {
-          pageProvider.currentIndex = 8;
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final BeritaModel dataPerBerita = postBeritaModel.berita[index];
+          String? dataFotoBerita = (dataPerBerita.photo == null ||
+                  dataPerBerita.photo == '')
+              ? 'https://d1x1dyl0o67nta.cloudfront.net/default_landscape.jpeg'
+              : dataPerBerita.photo;
+          return InkWell(
+            onTap: () {
+              pageProvider.currentIndex = 8;
+              pageProvider.idBerita = dataPerBerita.id!;
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(right: 7, left: 7),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(4, 6),
+                    spreadRadius: 0,
+                    blurRadius: 8,
+                    color: Color.fromRGBO(0, 0, 0, 0.06),
+                  ),
+                ],
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Image.network(
+                        '$dataFotoBerita',
+                        height: 12.h,
+                        width: 10.w,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            truncateCustome('${dataPerBerita.title}',
+                                length: 55),
+                            style: TextStyle(
+                                color: successColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            truncateCustome(
+                                '${parseFragment(dataPerBerita.description).text}',
+                                length: 70),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Baca Selengkapnya',
+                            style: TextStyle(color: successColor, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
         },
-        child: Container(
-          width: 340,
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.only(right: 7, left: 7),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(4, 6),
-                spreadRadius: 0,
-                blurRadius: 8,
-                color: Color.fromRGBO(0, 0, 0, 0.06),
-              ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Container(
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: Image.asset(
-                    'assets/background/default_image.png',
-                    height: 10.h,
-                    width: 10.w,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        truncateCustome(
-                            'Menkes hingga Shahnaz Haque Puji Kader Posyandu Banyuwangi',
-                            length: 55),
-                        style: TextStyle(
-                            color: successColor,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        truncateCustome(
-                            'Menteri Kesehatan Budi Gunadi Sadikin hingga pesohor Shahnaz Haque memuji',
-                            length: 70),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'Baca Selengkapnya',
-                        style: TextStyle(color: successColor, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+        itemCount: postBeritaModel.berita.length,
       );
     }
 
@@ -486,9 +531,10 @@ class HomeScreen extends StatelessWidget {
                 cardRaport(),
                 cardGrafik(),
                 headerNews(),
-                cardNews(),
-                cardNews(),
-                cardNews(),
+                Container(
+                  width: 340,
+                  child: cardNews(),
+                )
               ],
             ),
           ),

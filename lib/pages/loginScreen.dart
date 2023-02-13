@@ -6,7 +6,7 @@ import 'package:validatorless/validatorless.dart';
 import 'package:epsi/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:epsi/providers/posyandu_provider.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 // ignore: camel_case_types
 class loginScreen extends StatefulWidget {
@@ -20,17 +20,10 @@ class _formLoginScreen extends State<loginScreen> {
   TextEditingController passwordController = TextEditingController(text: '');
   bool isLoading = false;
   final formKey = GlobalKey<FormState>();
-
-  Future<void> signIn() async {
-    try {
-      await GoogleSignInApi.login();
-    } catch (error) {
-      print(error);
-    }
-  }
-
+  @override
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'Login Screen');
     var screenSize = MediaQuery.of(context).size;
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
@@ -38,7 +31,6 @@ class _formLoginScreen extends State<loginScreen> {
       setState(() {
         isLoading = true;
       });
-      // Provider.of<PosyanduProvider>(context).getPosyandu();
       if (formKey.currentState!.validate()) {
         if (await authProvider.login(
           email: emailController.text,
@@ -201,9 +193,7 @@ class _formLoginScreen extends State<loginScreen> {
             height: 55,
             margin: const EdgeInsets.only(top: 10, right: 10),
             child: ElevatedButton(
-              onPressed: () async {
-                await signIn();
-              },
+              onPressed: null,
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(

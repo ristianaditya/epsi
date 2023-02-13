@@ -1,11 +1,37 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:epsi/styleTheme.dart';
+import 'package:provider/provider.dart';
+import 'package:epsi/providers/posyandu_provider.dart';
+import 'package:epsi/providers/auth_provider.dart';
+import 'package:epsi/models/posyandu_model.dart';
+import 'package:epsi/models/kader_model.dart';
 
 // ignore: camel_case_types
-class PosyanduScreen extends StatelessWidget {
-  const PosyanduScreen({super.key});
+class PosyanduScreen extends StatefulWidget {
+  const PosyanduScreen({Key? key}) : super(key: key);
+  @override
+  _formPosyanduScreen createState() => _formPosyanduScreen();
+}
+
+class _formPosyanduScreen extends State<PosyanduScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final postModelAuth = Provider.of<AuthProvider>(context, listen: false);
+    final postModel = Provider.of<PosyanduProvider>(context, listen: false);
+    postModel.getPosyanduDetail(idPosyandu: postModelAuth.user?.posyandu);
+    postModel.getKader(idPosyandu: postModelAuth.user?.posyandu);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final postModel = Provider.of<PosyanduProvider>(context);
+    String? dataFotoPosyandu = (postModel.posyanduDetail?.gambar == null ||
+            postModel.posyanduDetail?.gambar == '')
+        ? 'https://d1x1dyl0o67nta.cloudfront.net/default_landscape.jpeg'
+        : postModel.posyanduDetail?.gambar;
     Widget dataPosyandu() {
       return Center(
         child: Container(
@@ -16,8 +42,8 @@ class PosyanduScreen extends StatelessWidget {
           decoration: cardCustome,
           child: Column(
             children: <Widget>[
-              Image.asset(
-                'assets/background/posyandu.jpg',
+              Image.network(
+                '${dataFotoPosyandu}',
                 fit: BoxFit.cover,
                 height: 200,
                 width: MediaQuery.of(context).size.width,
@@ -27,15 +53,15 @@ class PosyanduScreen extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const <Widget>[
-                  Text(
+                children: <Widget>[
+                  const Text(
                     "Nama Posyandu",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     width: 120,
                     child: Text(
-                      'Posyandu Aster',
+                      '${postModel.posyanduDetail?.name}',
                     ),
                   ),
                 ],
@@ -69,15 +95,15 @@ class PosyanduScreen extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const <Widget>[
-                  Text(
+                children: <Widget>[
+                  const Text(
                     "Alamat",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     width: 120,
                     child: Text(
-                      'Pameuntasan, Kutawaringin, Bandung Regency, West Java 40911',
+                      '${postModel.posyanduDetail?.alamat}',
                       softWrap: true,
                       maxLines: 4,
                     ),
@@ -91,24 +117,32 @@ class PosyanduScreen extends StatelessWidget {
     }
 
     Widget dataKader() {
-      return Center(
-        child: Container(
-          width: 350,
-          height: 60,
-          padding: const EdgeInsets.only(left: 25, right: 25),
-          margin: const EdgeInsets.only(top: 10, bottom: 10),
-          decoration: cardCustome,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text("Asep Berlian"),
-              Text(
-                "Hadir",
-                style: TextStyle(fontWeight: FontWeight.bold),
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final KaderModel dataPerKader = postModel.kader[index];
+          return Center(
+            child: Container(
+              width: 350,
+              height: 60,
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
+              decoration: cardCustome,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${dataPerKader.name}"),
+                  const Text(
+                    "Hadir",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
+        itemCount: postModel.kader.length,
       );
     }
 
