@@ -214,16 +214,7 @@ class _formLoginScreen extends State<loginScreen> {
             height: 55,
             margin: const EdgeInsets.only(top: 10),
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const loginScreen();
-                    },
-                  ),
-                );
-              },
+              onPressed: () {},
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(

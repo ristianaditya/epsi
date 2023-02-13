@@ -28,7 +28,6 @@ class AnakService {
       'jenis_kelamin': jenis_kelamin,
       'tempat_lahir': tempat_lahir,
       'tanggal_lahir': tanggal_lahir.toString(),
-      'umur': 12,
     });
     var response = await http.post(
       Uri.parse(url),

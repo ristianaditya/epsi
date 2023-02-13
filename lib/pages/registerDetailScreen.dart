@@ -252,7 +252,7 @@ class _formRegisterDetailScreen extends State<RegisterDetailScreen> {
                 keyboardType: TextInputType.multiline,
                 decoration: DecorationCustom('Alamat', Icons.location_on),
                 validator: Validatorless.multiple([
-                  Validatorless.required('Nama wajib diisi'),
+                  Validatorless.required('Alamat wajib diisi'),
                 ]),
               ),
             ),

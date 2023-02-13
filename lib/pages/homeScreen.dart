@@ -342,22 +342,23 @@ class _formHomeScreen extends State<HomeScreen> {
     }
 
     Widget cardGrafik() {
+      List bulan = ['Januari', 'Febuari', 'Maret', 'April', 'Mei'];
       return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           var dataPerAnak = postRaportModel.dashboard?[index];
-          List<LinearSales> dataBerat = [];
+          List<OrdinalSales> dataBerat = [];
           for (var item in dataPerAnak[1]) {
-            dataBerat.add(LinearSales(item[1], item[0]));
+            dataBerat.add(OrdinalSales(item[1], item[0]));
           }
-          List<charts.Series<LinearSales, int>> series = [
+          List<charts.Series<OrdinalSales, int>> series = [
             charts.Series(
-              id: "Products",
+              id: "Sales",
               colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
               data: dataBerat,
-              domainFn: (LinearSales series, _) => series.year,
-              measureFn: (LinearSales series, _) => series.sales,
+              domainFn: (OrdinalSales series, _) => series.year,
+              measureFn: (OrdinalSales series, _) => series.sales,
             )
           ];
           return Center(
@@ -383,7 +384,7 @@ class _formHomeScreen extends State<HomeScreen> {
                 const SizedBox(
                   height: 3,
                 ),
-                Text('Grafik rekap pertumbuhan anak ${dataPerAnak[0]}'),
+                Text('Grafik pertumbuhan berat badan ${dataPerAnak[0]}'),
                 const SizedBox(
                   height: 3,
                 ),
@@ -544,9 +545,9 @@ class _formHomeScreen extends State<HomeScreen> {
   }
 }
 
-class LinearSales {
+class OrdinalSales {
   final int year;
   final int sales;
 
-  LinearSales(this.year, this.sales);
+  OrdinalSales(this.year, this.sales);
 }

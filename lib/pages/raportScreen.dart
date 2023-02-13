@@ -225,15 +225,29 @@ class _formRaportScreen extends State<RaportScreen> {
 
     Widget cardGrafikTinggi() {
       List<LinearSales> data = [];
+      List bulan = [
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+      ];
       for (var item in raportProvider.grafikTinggi) {
         data.add(LinearSales(item.bulan!, item.tinggi_badan!));
       }
-      List<charts.Series<LinearSales, int>> series = [
+      List<charts.Series<LinearSales, String>> series = [
         charts.Series(
           id: "Products",
           colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
           data: data,
-          domainFn: (LinearSales series, _) => series.year,
+          domainFn: (LinearSales series, _) => '${bulan[series.year]}',
           measureFn: (LinearSales series, _) => series.sales,
         )
       ];
@@ -269,7 +283,7 @@ class _formRaportScreen extends State<RaportScreen> {
               thickness: 1,
             ),
             Expanded(
-              child: charts.LineChart(series, animate: true),
+              child: charts.BarChart(series, animate: true),
             ),
           ],
         ),
@@ -278,15 +292,29 @@ class _formRaportScreen extends State<RaportScreen> {
 
     Widget cardGrafikBerat() {
       List<LinearSales> dataBerat = [];
+      List bulan = [
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+      ];
       for (var item in raportProvider.grafikBerat) {
         dataBerat.add(LinearSales(item.bulan!, item.berat_badan!));
       }
-      List<charts.Series<LinearSales, int>> series = [
+      List<charts.Series<LinearSales, String>> series = [
         charts.Series(
           id: "Products",
           colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
           data: dataBerat,
-          domainFn: (LinearSales series, _) => series.year,
+          domainFn: (LinearSales series, _) => '${bulan[series.year]}',
           measureFn: (LinearSales series, _) => series.sales,
         )
       ];
@@ -322,7 +350,7 @@ class _formRaportScreen extends State<RaportScreen> {
               thickness: 1,
             ),
             Expanded(
-              child: charts.LineChart(series, animate: true),
+              child: charts.BarChart(series, animate: true),
             ),
           ],
         ),
