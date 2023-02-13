@@ -230,7 +230,7 @@ class _formProfileScreen extends State<ProfileScreen> {
         child: Container(
           width: 340,
           height: 45,
-          margin: const EdgeInsets.only(top: 25, bottom: 40),
+          margin: const EdgeInsets.only(top: 10, bottom: 40),
           child: ElevatedButton(
             onPressed: () => showDialog<String>(
               context: context,
@@ -280,6 +280,36 @@ class _formProfileScreen extends State<ProfileScreen> {
             profile(),
             headerAnak(),
             daftarAnak(),
+            Center(
+              child: Container(
+                width: 340,
+                height: 45,
+                margin: const EdgeInsets.only(top: 90, bottom: 7),
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/anakRegister');
+                  },
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    side: MaterialStateProperty.all(
+                      BorderSide(
+                        color: colorPrimary,
+                        width: 2.5,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    'Tambah Anak',
+                    style: TextStyle(color: colorPrimary),
+                  ),
+                ),
+              ),
+            ),
             buttonKeluar(),
           ],
         ),
