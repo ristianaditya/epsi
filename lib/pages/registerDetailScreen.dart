@@ -22,11 +22,15 @@ class _formRegisterDetailScreen extends State<RegisterDetailScreen> {
   TextEditingController posyanduController = TextEditingController(text: '');
   final formKey = GlobalKey<FormState>();
   String valueJenisKelamin = 'Laki-Laki';
-  String valuePosyandu = '';
   late Future<PosyanduModel> futurePosyandu;
+  String valuePosyandu = '';
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      // valuePosyandu = dropdownValuePosyandu!;
+      print(valuePosyandu);
+    });
     FirebaseAnalytics.instance.setCurrentScreen(screenName: 'Detail Register');
     PosyanduProvider posyanduProvider = Provider.of<PosyanduProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
@@ -38,13 +42,13 @@ class _formRegisterDetailScreen extends State<RegisterDetailScreen> {
     TextEditingController nameController =
         TextEditingController(text: user?.name);
 
+    String? dropdownValuePosyandu = dataPosyandu.first.id;
     TextEditingController nikController =
         TextEditingController(text: user?.nik);
 
     const List<String> list = <String>['Laki-Laki', 'Perempuan'];
     String dropdownValue = list.first;
-    String? dropdownValuePosyandu = dataPosyandu.first.id;
-    valuePosyandu = dropdownValuePosyandu!;
+    // valuePosyandu = dropdownValuePosyandu!;
     handleUpdate() async {
       if (formKey.currentState!.validate()) {
         if (await authProvider.update(
@@ -54,6 +58,7 @@ class _formRegisterDetailScreen extends State<RegisterDetailScreen> {
           token: user?.token,
           id: user?.id,
         )) {
+          print(valuePosyandu);
           Navigator.pushNamed(context, '/anakRegister');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -313,7 +318,7 @@ class _formRegisterDetailScreen extends State<RegisterDetailScreen> {
                 onChanged: (String? value) {
                   setState(() {
                     dropdownValuePosyandu = value!;
-                    valuePosyandu = value;
+                    valuePosyandu = dropdownValuePosyandu!;
                   });
                 },
                 items:
